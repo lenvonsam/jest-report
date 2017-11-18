@@ -1,7 +1,7 @@
 {
   "name": "jest-report",
   "description": "",
-  "version": "0.1.1",
+  "version": "0.1.7",
   "main": "lib/index.js",
   "author": "yunqiangwu",
   "repository": "yunqiangwu/jest-report",
@@ -9,16 +9,25 @@
   "scripts": {
     "compile": "babel src --out-dir lib",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "prepublish": "npm run compile",
+    "prepublish": "npm run compile && cd boilerplate && npm run build",
+    "install:boilerplate": "cd boilerplate && npm install",
     "test": "babel-node ./node_modules/.bin/isparta cover _mocha"
   },
+  "files": [
+    "boilerplate/dist",
+    "lib"
+  ],
   "devDependencies": {
     "babel-cli": "*",
     "babel-preset-es2015-node4": "*",
-    "coveralls": "*",
     "chai": "*",
+    "coveralls": "*",
     "isparta": "*",
     "mocha": "*",
     "sinon": "*"
+  },
+  "dependencies": {
+    "fs-extra": "^4.0.2",
+    "md5": "^2.2.1"
   }
 }
