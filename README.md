@@ -38,6 +38,50 @@ Then, just use Jest as usual, e.g. put this in your `package.json`
 }
 ```
 Then, simply run `npm test`, and open `./dist/testReport/reporter.html` is HTML reporter
+
+## Example
+jest test file
+```
+import Nightmare from 'nightmare';
+import { helperBuilder } from 'jest-report';
+import webConfig from '../common/config';
+
+describe('Login', () => {
+  let page;
+  beforeEach(() => {
+    page = Nightmare({ show: false }).viewport(1024, 768);
+    page.goto('http://localhost:8000/#/user/login');
+  });
+
+  it('should login with failure', async () => {
+    const reportHelper = helperBuilder('Login', 'should login with failure');
+    reportHelper.monitorPage(page);
+    await page
+      .type('#userName', 'mockuser')
+      .type('#password', 'wrong_password')
+      .click('button[type="submit"]')
+      .wait('.ant-alert-error'); // should display error
+    await page.screenshot(reportHelper.genPicturePath());
+    await page.end();
+    console.log(reportHelper.genPicturePath());
+    console.log(reportHelper.genPicturePath());
+  });
+
+  it('should login successfully', async () => {
+    const text = await page
+      .type('#userName')
+      .type('#userName', 'admin')
+      .type('#password')
+      .type('#password', '888888')
+      .click('button[type="submit"]')
+      .wait('.ant-layout-sider h1') // should display error
+      .evaluate(() => document.body.innerHTML)
+      .end();
+    expect(text).toContain(`<h1>${webConfig.logoText}</h1>`);
+  });
+});
+```
+
 ## License
 
 MIT
